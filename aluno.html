@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Aluno - Educação Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #f39c12;
+            --background-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+            padding: 1rem 0;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .navbar-brand img {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover {
+            color: white;
+        }
+
+        .navbar-brand:hover img {
+            transform: scale(1.1);
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-custom {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .progress-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .action-card {
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-card .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        .floating-action-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .floating-action-button:hover {
+            transform: scale(1.1);
+            background: #e67e22;
+            color: white;
+        }
+
+        .achievement-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        .achievement-badge:hover {
+            transform: scale(1.1);
+            color: var(--secondary-color);
+        }
+
+        /* Estilos para o modal de conteúdo */
+        .content-section .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .content-section .progress {
+            background-color: #f0f0f0;
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            font-weight: 500;
+        }
+
+        .achievements .card {
+            transition: transform 0.2s;
+        }
+
+        .achievements .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .modal-header.bg-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+        }
+
+        .progress-overview .progress {
+            height: 15px;
+            border-radius: 10px;
+        }
+
+        .progress-overview .progress-bar {
+            border-radius: 10px;
+        }
+
+        .content-section h5 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .achievements i {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievements .card {
+            height: 100%;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Estilos para slides */
+        .slide-preview-modal .modal-dialog {
+            max-width: 80%;
+            height: 90vh;
+            margin: 1.75rem auto;
+            pointer-events: auto !important;
+        }
+
+        .slide-preview-modal .modal-content {
+            height: 100%;
+            background: #f8f9fa;
+            pointer-events: auto !important;
+        }
+
+        .slide-preview-modal {
+            pointer-events: auto !important;
+        }
+
+        .modal.fade.show {
+            pointer-events: auto !important;
+        }
+
+        .modal-backdrop.show {
+            pointer-events: auto !important;
+            opacity: 0.5;
+        }
+
+        /* Garante que o conteúdo da modal seja clicável */
+        .modal-body, 
+        .modal-header,
+        .modal-footer,
+        .preview-content,
+        .quiz-container,
+        .quiz-option {
+            pointer-events: auto !important;
+        }
+
+        .timeline li {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .quiz-option .option-letter {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        .content-list .card {
+            transition: transform 0.3s;
+        }
+
+        .content-list .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Estilos para a modal */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-dialog {
+            max-width: 80%;
+            margin: 1.75rem auto;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .preview-content {
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .slide-navigation {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* Estilos para quiz e explicações */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(5px);
+            background-color: #f8f9fa;
+            border-color: #0d6efd;
+        }
+
+        .quiz-option.correct {
+            border-color: #198754;
+            background-color: #d1e7dd;
+            animation: pulse-success 0.5s;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+            animation: shake 0.5s;
+        }
+
+        .quiz-option .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        .quiz-option.correct .option-letter {
+            background: #198754;
+        }
+
+        .quiz-option.incorrect .option-letter {
+            background: #dc3545;
+        }
+
+        .alert-info {
+            border-left: 4px solid #0dcaf0;
+            background-color: #f8f9fa;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .alert-info .alert-heading {
+            color: #0dcaf0;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-info p {
+            color: #495057;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        @keyframes pulse-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Ajustes para responsividade */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 0 1rem;
+            }
+
+            .quiz-option {
+                padding: 0.75rem;
+            }
+
+            .quiz-option .option-letter {
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="pt-5">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="assets/logo.svg" alt="Logo Educação Digital">
+                <span>Painel do Aluno</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="me-3" id="studentName">Olá, Aluno</span>
+                <span id="studentPoints" class="badge bg-success">Pontos: 850</span>
+                <button class="btn btn-outline-light ms-3" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-4">
+        <!-- Progress Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="progress-container">
+                    <h3 class="progress-title">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Seu Progresso
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="achievement-badge">
+                                <i class="fas fa-book-reader"></i>
+                            </div>
+                            <h5>Aulas Concluídas</h5>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                            </div>
+                            <span class="text-muted">15 de 20 aulas</span>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="card h-100" id="pointsCard">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-star fa-3x mb-3 text-warning"></i>
+                                    <h5 class="card-title">Pontuação</h5>
+                                    <h3 class="text-primary">850</h3>
+                                    <p class="card-text">Sua posição atual 3º lugar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="achievement-badge">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <h5>Conquistas</h5>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"></div>
+                            </div>
+                            <span class="text-muted">6 de 10 conquistas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="action-card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-book me-2"></i>
+                            Conteúdo
+                        </h5>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contentModal">
+                                <i class="fas fa-book me-2"></i>
+                                Ver Conteúdo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="action-card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-tasks me-2"></i>
+                            Atividades
+                        </h5>
+                        <div class="d-grid">
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activityModal">
+                                <i class="fas fa-clipboard-list me-2"></i>
+                                Ver Atividades
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="action-card">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle me-2"></i>
+                        Ajuda
+                    </h5>
+                    <div class="d-grid">
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#helpModal">
+                            <i class="fas fa-hands-helping me-2"></i>
+                            Obter Ajuda
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content List -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="content-card">
+                    <h4 class="mb-4">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Próximas Aulas
+                    </h4>
+                    <div id="lessonsList">
+                        <!-- Lessons will be loaded here -->
+                        <!-- Lista de Conteúdos -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-book-reader me-2"></i>
+                                    Conteúdo das Aulas
+                                </h5>
+                                <button class="toggle-btn" onclick="toggleContentList(this)">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="content-list">
+                                    <!-- História -->
+                                    <div class="content-item mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-primary mb-0">
+                                                <i class="fas fa-history me-2"></i>
+                                                História
+                                            </h6>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Guerra Fria: Corrida Espacial</h6>
+                                                        <p class="text-muted small mb-0">
+                                                            <i class="fas fa-clock me-1"></i>
+                                                            Última atualização: 01/02/2025
+                                                        </p>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm" onclick="showPreview('historia1')">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Visualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Matemática -->
+                                    <div class="content-item mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-primary mb-0">
+                                                <i class="fas fa-calculator me-2"></i>
+                                                Matemática
+                                            </h6>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Introdução à Trigonometria</h6>
+                                                        <p class="text-muted small mb-0">
+                                                            <i class="fas fa-clock me-1"></i>
+                                                            Última atualização: 02/02/2025
+                                                        </p>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm" onclick="showPreview('matematica1')">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Visualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ciências -->
+                                    <div class="content-item mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-primary mb-0">
+                                                <i class="fas fa-flask me-2"></i>
+                                                Ciências
+                                            </h6>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Sistema Digestivo</h6>
+                                                        <p class="text-muted small mb-0">
+                                                            <i class="fas fa-clock me-1"></i>
+                                                            Última atualização: 02/02/2025
+                                                        </p>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm" onclick="showPreview('ciencias1')">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Visualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <a href="#" class="floating-action-button" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+        <i class="fas fa-robot"></i>
+    </a>
+
+    <!-- AI Chat Modal -->
+    <div class="modal fade" id="aiChatModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-robot me-2"></i>
+                        Assistente IA
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container mb-3" style="height: 400px; overflow-y: auto;">
+                        <div id="chatMessages" class="p-3">
+                            <!-- Mensagens serão adicionadas aqui -->
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="questionInput" class="form-control" placeholder="Digite sua pergunta...">
+                        <button class="btn btn-primary" onclick="askAI()">
+                            <i class="fas fa-paper-plane"></i> Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Conteúdo -->
+    <div class="modal fade" id="contentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-book-reader me-2"></i>
+                        Meu Progresso
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="progress-overview mb-4">
+                        <h4 class="text-primary">Progresso Geral: 75%</h4>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="content-sections">
+                        <!-- História -->
+                        <div class="content-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-history me-2"></i>
+                                História
+                            </h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Revolução Industrial</span>
+                                        <span class="badge bg-success">Concluído</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Segunda Guerra Mundial</span>
+                                        <span class="badge bg-success">Concluído</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Guerra Fria</span>
+                                        <span class="badge bg-warning">Em andamento</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matemática -->
+                        <div class="content-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-calculator me-2"></i>
+                                Matemática
+                            </h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Álgebra Básica</span>
+                                        <span class="badge bg-success">Concluído</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Geometria</span>
+                                        <span class="badge bg-success">Concluído</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Trigonometria</span>
+                                        <span class="badge bg-danger">Não iniciado</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ciências -->
+                        <div class="content-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-flask me-2"></i>
+                                Ciências
+                            </h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Sistema Solar</span>
+                                        <span class="badge bg-success">Concluído</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Corpo Humano</span>
+                                        <span class="badge bg-warning">Em andamento</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Química Básica</span>
+                                        <span class="badge bg-danger">Não iniciado</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="achievements mt-4">
+                        <h5 class="text-primary mb-3">
+                            <i class="fas fa-trophy me-2"></i>
+                            Conquistas
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-star text-warning fa-2x mb-2"></i>
+                                        <h6>Mestre em História</h6>
+                                        <small>Completou 2 módulos de História</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-medal text-primary fa-2x mb-2"></i>
+                                        <h6>Matemático Dedicado</h6>
+                                        <small>100% em Álgebra Básica</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-atom text-info fa-2x mb-2"></i>
+                                        <h6>Cientista Iniciante</h6>
+                                        <small>Completou Sistema Solar</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Atividades -->
+    <div class="modal fade" id="activityModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-tasks me-2"></i>
+                        Próximas Atividades
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upcoming-activities">
+                        <!-- História -->
+                        <div class="activity-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-history me-2"></i>
+                                História
+                            </h5>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Trabalho: Guerra Fria</h6>
+                                            <p class="mb-0 text-muted small">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Pesquisa sobre a Corrida Espacial
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-warning mb-1">Prazo: 5 dias</div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                Entrega: 07/02/2025
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Matemática -->
+                        <div class="activity-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-calculator me-2"></i>
+                                Matemática
+                            </h5>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Lista de Exercícios: Trigonometria</h6>
+                                            <p class="mb-0 text-muted small">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Introdução a Seno e Cosseno
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-info mb-1">Inicia em: 2 dias</div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                Início: 04/02/2025
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Avaliação: Trigonometria Básica</h6>
+                                            <p class="mb-0 text-muted small">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Teste online com 10 questões
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-danger mb-1">Prazo: 10 dias</div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                Entrega: 12/02/2025
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ciências -->
+                        <div class="activity-section mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-flask me-2"></i>
+                                Ciências
+                            </h5>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Projeto: Sistema Digestivo</h6>
+                                            <p class="mb-0 text-muted small">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Maquete do Sistema Digestivo
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-success mb-1">Novo</div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                Entrega: 15/02/2025
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Introdução à Química</h6>
+                                            <p class="mb-0 text-muted small">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Aula inaugural no laboratório
+                                            </p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="badge bg-primary mb-1">Aula Prática</div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-calendar-alt me-1"></i>
+                                                Data: 20/02/2025
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ajuda -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-question-circle me-2"></i>
+                        Perguntas Frequentes
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Barra de pesquisa -->
+                    <div class="search-box mb-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Pesquisar nas perguntas frequentes...">
+                        </div>
+                    </div>
+
+                    <!-- Accordion de FAQs -->
+                    <div class="accordion" id="faqAccordion">
+                        <!-- Acesso à Plataforma -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqAccess">
+                                    <i class="fas fa-key me-2"></i>
+                                    Acesso à Plataforma
+                                </button>
+                            </h2>
+                            <div id="faqAccess" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Como faço para redefinir minha senha?</h6>
+                                        <p>Clique em "Esqueci minha senha" na tela de login. Você receberá um e-mail com instruções para criar uma nova senha.</p>
+                                    </div>
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Posso acessar a plataforma de qualquer dispositivo?</h6>
+                                        <p>Sim! Nossa plataforma é responsiva e pode ser acessada de computadores, tablets e smartphones.</p>
+                                    </div>
+                                    <div class="faq-item">
+                                        <h6 class="text-primary">Como alterar meu e-mail de contato?</h6>
+                                        <p>Acesse seu perfil, clique em "Configurações" e selecione "Alterar E-mail". Será necessário confirmar a mudança no novo endereço.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aulas e Conteúdo -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent">
+                                    <i class="fas fa-book me-2"></i>
+                                    Aulas e Conteúdo
+                                </button>
+                            </h2>
+                            <div id="faqContent" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Posso baixar as aulas para assistir offline?</h6>
+                                        <p>Sim! Procure o ícone de download ao lado do vídeo da aula. O conteúdo ficará disponível offline por 30 dias.</p>
+                                    </div>
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Como faço para acompanhar meu progresso?</h6>
+                                        <p>No menu principal, clique em "Ver Conteúdo" para visualizar seu progresso em cada matéria e suas conquistas.</p>
+                                    </div>
+                                    <div class="faq-item">
+                                        <h6 class="text-primary">Perdi uma aula ao vivo, posso recuperá-la?</h6>
+                                        <p>Todas as aulas ao vivo são gravadas e disponibilizadas em até 24 horas na seção "Gravações".</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Atividades e Avaliações -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqActivities">
+                                    <i class="fas fa-tasks me-2"></i>
+                                    Atividades e Avaliações
+                                </button>
+                            </h2>
+                            <div id="faqActivities" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">O que acontece se eu perder o prazo de uma atividade?</h6>
+                                        <p>Entre em contato com seu professor. Cada caso será avaliado individualmente, podendo haver penalidade na nota.</p>
+                                    </div>
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Como funciona a correção das atividades?</h6>
+                                        <p>As atividades são corrigidas em até 48 horas após a entrega. Você receberá uma notificação quando a nota estiver disponível.</p>
+                                    </div>
+                                    <div class="faq-item">
+                                        <h6 class="text-primary">Posso refazer uma avaliação?</h6>
+                                        <p>Algumas avaliações permitem múltiplas tentativas. Verifique as regras específicas de cada atividade.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suporte Técnico -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqSupport">
+                                    <i class="fas fa-headset me-2"></i>
+                                    Suporte Técnico
+                                </button>
+                            </h2>
+                            <div id="faqSupport" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">O vídeo não está carregando, o que fazer?</h6>
+                                        <p>Verifique sua conexão com a internet, limpe o cache do navegador e tente novamente. Se o problema persistir, entre em contato com o suporte.</p>
+                                    </div>
+                                    <div class="faq-item mb-3">
+                                        <h6 class="text-primary">Como reportar um problema técnico?</h6>
+                                        <p>Use o botão "Suporte" no canto inferior direito da tela ou envie um e-mail para suporte@plataforma.com</p>
+                                    </div>
+                                    <div class="faq-item">
+                                        <h6 class="text-primary">Qual a configuração mínima recomendada?</h6>
+                                        <p>Recomendamos navegadores atualizados (Chrome, Firefox, Edge) e conexão de internet de pelo menos 5Mbps.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-headset me-2"></i>
+                        Contatar Suporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização de Slides -->
+    <div class="modal" id="previewModal" tabindex="-1" aria-labelledby="previewTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="previewTitle">
+                        <i class="fas fa-book-reader me-2"></i>
+                        <span>Visualização do Conteúdo</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="previewContent"></div>
+                    <div class="navigation-buttons mt-3 d-flex justify-content-between">
+                        <button class="btn btn-primary" onclick="previousSlide()">
+                            <i class="fas fa-chevron-left"></i> Anterior
+                        </button>
+                        <span id="slideCounter" class="align-self-center"></span>
+                        <button class="btn btn-primary" onclick="nextSlide()">
+                            Próximo <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showPreview(contentId) {
+            const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+            modal.show();
+        }
+    </script>
+    <script src="aluno.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!-- Modal para criação de conteúdo -->
+<div class="modal fade" id="contentGeneratorModal" tabindex="-1" aria-labelledby="contentGeneratorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contentGeneratorModalLabel">Criar Novo Conteúdo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="presentationTitle" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="presentationTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="presentationTheme" class="form-label">Tema</label>
+                            <select class="form-control" id="presentationTheme">
+                                <option value="default">Padrão</option>
+                                <option value="dark">Escuro</option>
+                                <option value="light">Claro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="presentationLayout" class="form-label">Layout</label>
+                            <select class="form-control" id="presentationLayout">
+                                <option value="modern">Moderno</option>
+                                <option value="classic">Clássico</option>
+                                <option value="minimal">Minimalista</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary w-100" onclick="addNewSlide('text')">Adicionar Slide de Texto</button>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-info w-100" onclick="addNewSlide('image')">Adicionar Slide de Imagem</button>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-warning w-100" onclick="addNewSlide('quiz')">Adicionar Quiz</button>
+                        </div>
+                        <div id="slidesList" class="mt-4">
+                            <!-- Lista de slides será adicionada aqui -->
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="slidePreview" class="border p-3 rounded">
+                            <!-- Prévia do slide será mostrada aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="savePresentation()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

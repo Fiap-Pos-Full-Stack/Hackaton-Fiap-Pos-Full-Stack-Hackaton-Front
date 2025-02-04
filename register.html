@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Plataforma Educacional</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Cadastro</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="registrationForm">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="regName" placeholder="Nome Completo" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="regEmail" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="regUsername" placeholder="Nome de Usuário" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regPassword" placeholder="Senha" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirmar Senha" required>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-control" id="regUserType">
+                            <option value="professor">Professor</option>
+                            <option value="aluno">Aluno</option>
+                        </select>
+                    </div>
+                    <div id="professorFields" class="mb-3">
+                        <input type="text" class="form-control mb-2" id="regSubject" placeholder="Disciplina">
+                        <input type="text" class="form-control" id="regRegistration" placeholder="Número de Registro">
+                    </div>
+                    <div id="studentFields" class="mb-3 d-none">
+                        <input type="text" class="form-control mb-2" id="regClass" placeholder="Turma">
+                        <input type="text" class="form-control" id="regStudentId" placeholder="Número de Matrícula">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-2">Cadastrar</button>
+                    <a href="index_new.html" class="btn btn-secondary w-100">Voltar para Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+</html>

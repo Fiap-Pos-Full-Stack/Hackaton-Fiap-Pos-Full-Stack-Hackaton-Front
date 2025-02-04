@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Professor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #47B5FF;
+            --secondary-color: #FF9F3B;
+            --background-color: #F5F7FA;
+            --text-color: #333;
+            --light-blue: #DFF6FF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+
+        .stats-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats-card h3 {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card p {
+            color: #666;
+            margin: 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .action-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .ranking-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .ranking-title {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .action-card {
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-card .card-title {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 500;
+        }
+
+        .slides-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--background-color);
+            border-radius: 10px;
+        }
+
+        .slide-preview {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .slide-preview-modal .modal-dialog {
+            max-width: 80%;
+            height: 90vh;
+            margin: 1.75rem auto;
+        }
+
+        .slide-preview-modal .modal-content {
+            height: 100%;
+            background: #f8f9fa;
+        }
+
+        .slide-preview-modal .modal-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-slide-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .preview-slide-text {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 80%;
+        }
+
+        .preview-slide-image {
+            max-width: 80%;
+            max-height: 60vh;
+            object-fit: contain;
+            margin: 1rem 0;
+        }
+
+        .preview-quiz-option {
+            width: 80%;
+            padding: 1rem;
+            margin: 0.5rem;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .preview-quiz-option:hover {
+            transform: translateX(10px);
+            background: #f8f9fa;
+        }
+
+        .preview-quiz-option.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .preview-quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* Estilos para o quiz */
+        .quiz-slide .input-group-text {
+            min-width: 45px;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-right: none;
+        }
+
+        .quiz-slide .input-group-text input[type="radio"] {
+            margin: 0;
+        }
+
+        .quiz-slide .form-control {
+            border-left: none;
+        }
+
+        .quiz-slide .input-group:focus-within {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .quiz-slide .input-group:focus-within .input-group-text,
+        .quiz-slide .input-group:focus-within .form-control {
+            border-color: #86b7fe;
+        }
+
+        .quiz-slide .input-group-text input[type="radio"]:checked {
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .quiz-slide .input-group-text input[type="radio"]:checked + .form-control {
+            border-color: #198754;
+        }
+        .uppermenu{
+            height: 1050px;
+        }
+        .margintop4 {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .content-creator, .margintop4 {
+            flex: 1;
+            width: 100%;
+        }
+
+        .col-lg-8 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ranking-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .ranking-card .card-header {
+            padding: 1rem;
+            background: var(--primary-color) !important;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ranking-card .card-header h5 {
+            margin: 0;
+            color: white;
+        }
+
+        .ranking-scroll {
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            transition: all 0.3s ease;
+        }
+
+        .ranking-scroll.collapsed {
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .ranking-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ranking-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .ranking-scroll::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .ranking-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .ranking-item {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .ranking-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+
+        .ranking-item.gold {
+            border-left-color: #FFD700;
+        }
+
+        .ranking-item.silver {
+            border-left-color: #C0C0C0;
+        }
+
+        .ranking-item.bronze {
+            border-left-color: #CD7F32;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            opacity: 0.8;
+        }
+
+        .toggle-btn i {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .toggle-btn.collapsed i {
+            transform: rotate(180deg);
+        }
+
+        .position-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .badge-gold {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        .badge-silver {
+            background-color: #C0C0C0;
+            color: #000;
+        }
+
+        .badge-bronze {
+            background-color: #CD7F32;
+            color: #fff;
+        }
+
+        .badge-normal {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        #turmaSelect {
+            border-radius: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        #turmaSelect:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(71, 181, 255, 0.25);
+        }
+
+        .card-body {
+            transition: all 0.3s ease;
+            padding: 1rem;
+        }
+
+        .card-body.collapsed {
+            padding: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        /* Estilos para o criador de conteúdo */
+        .content-creator {
+            transition: all 0.3s ease;
+        }
+
+        .content-creator.collapsed .card-body {
+            padding: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .slide-preview {
+            display: none;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .slide-preview.active {
+            display: block;
+        }
+
+        .slide-header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-content {
+            padding: 20px;
+            min-height: 250px;
+        }
+
+        .slide-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .slide-image[src]:not([src=""]) {
+            display: block;
+            max-height: 200px;
+            margin: 0 auto;
+        }
+
+        .image-upload {
+            margin-top: 10px;
+        }
+
+        .image-input {
+            display: none;
+        }
+
+        .quiz-options {
+            margin: 15px 0;
+        }
+
+        #slideCounter {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        #contentTitle {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .quiz-option {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .slide-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .content-tools {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .content-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .content-list.active {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.125);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .list-group-item:hover {
+            transform: translateX(5px);
+            background: #f8f9fa;
+        }
+
+        .list-group-item .content-info {
+            flex-grow: 1;
+        }
+
+        .list-group-item .content-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .preview-quiz-option {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preview-quiz-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .preview-quiz-option.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .preview-quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        /* Estilos para a lista de conteúdos */
+        .content-list {
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.125);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            transform: translateX(5px);
+            background-color: #f8f9fa;
+            border-color: var(--primary-color);
+        }
+
+        .list-group-item .content-info {
+            flex-grow: 1;
+        }
+
+        .list-group-item .content-info h6 {
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .list-group-item .content-info small {
+            color: #6c757d;
+        }
+
+        .list-group-item .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .list-group-item .content-actions button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .toggle-content-list {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-content-list:hover {
+            opacity: 0.8;
+        }
+
+        .toggle-content-list i {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-content-list.collapsed i {
+            transform: rotate(180deg);
+        }
+
+        /* Estilos para o estado vazio */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            margin-bottom: 0;
+            font-size: 0.875rem;
+        }
+
+        /* Estilos para visualização de conteúdo */
+        .preview-slide-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .preview-slide-content .slide-preview {
+            width: 100%;
+            text-align: center;
+        }
+
+        .preview-slide-content .slide-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-slide-content .slide-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Estilos para quiz */
+        .quiz-preview {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .quiz-preview h3 {
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Estilos para botões de ação */
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .content-actions button {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .content-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .content-actions button i {
+            margin: 0;
+        }
+
+        /* Modal de visualização */
+        .modal-dialog.modal-lg {
+            max-width: 800px;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--primary-color);
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            background: var(--background-color);
+        }
+
+        .preview-navigation {
+            margin-bottom: 2rem;
+        }
+
+        #previewSlideCounter {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .btn-close {
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* Estilos gerais */
+        .slide-preview {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .slide-preview.active {
+            display: block;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .slide-header h6 {
+            margin: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .slide-content {
+            padding: 1rem 0;
+        }
+
+        .slide-text {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .image-upload {
+            margin-top: 1rem;
+        }
+
+        .slide-image {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Estilos para quiz */
+        .quiz-slide .quiz-question {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            margin-top: 1rem;
+        }
+
+        .quiz-option {
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option .input-group-text {
+            background-color: transparent;
+            border-right: none;
+        }
+
+        .quiz-option .form-control {
+            border-left: none;
+        }
+
+        .quiz-option .btn-outline-danger {
+            border-color: #dee2e6;
+        }
+
+        .quiz-option .btn-outline-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        /* Estilos para botões de ação */
+        .content-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .content-actions .btn {
+            padding: 0.25rem 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .content-actions .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .content-actions .btn i {
+            font-size: 0.875rem;
+        }
+
+        /* Estilos para lista de conteúdos */
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: var(--light-blue);
+        }
+
+        .content-info h6 {
+            color: var(--text-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .content-info small {
+            color: #6c757d;
+        }
+
+        /* Estilos para modal de preview */
+        .preview-slide-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            min-height: 300px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .preview-navigation {
+            margin-bottom: 1.5rem;
+        }
+
+        #previewSlideCounter {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Estado vazio */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .list-group-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .content-actions {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        /* Estilos para as opções do quiz */
+        .quiz-options {
+            margin-top: 10px;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            margin-bottom: 1px;
+            padding: 1px;
+            border: 1px solid #ddd;
+            border-radius: 1px;
+            background-color: #f8f9fa;
+        }
+
+        .quiz-option input[type="text"] {
+            flex-grow: 1;
+        }
+
+        .quiz-option .btn-remove-option {
+            padding: 4px 8px;
+        }
+
+        .quiz-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .floating-action-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .floating-action-button:hover {
+            transform: scale(1.1);
+            background: #e67e22;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container">
+                <span class="navbar-brand">Painel do Professor</span>
+                <button class="btn btn-outline-danger" onclick="logout()">Sair</button>
+            </div>
+        </nav>
+    </div>
+
+    <section class="hero-section">
+        <div class="school-header text-center mb-4">
+            <h2>E.E. Ensino Fundamental</h2>
+            <p class="mb-0">Sistema de Ranking - 9º Ano</p>
+        </div>
+        <div class="progress-section">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-book"></i>
+                        <h3>25</h3>
+                        <p>Conteúdos Criados</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-users"></i>
+                        <h3>350</h3>
+                        <p>Alunos Ativos</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>85%</h3>
+                        <p>Taxa de Engajamento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uppermenu container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="card ranking-card">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Ranking - 9º Ano</h5>
+                            <button class="toggle-btn" onclick="toggleRanking(this)">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <select class="form-select" id="turmaSelect" onchange="updateRanking(this.value)">
+                                        <option value="9A">9º Ano A</option>
+                                        <option value="9B">9º Ano B</option>
+                                        <option value="9C">9º Ano C</option>
+                                        <option value="9D">9º Ano D</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="ranking-scroll">
+                                <div id="rankingList">
+                                    <!-- Ranking items will be added here by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card content-creator mb-4">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Criador de Conteúdo - História</h5>
+                            <button class="toggle-btn" onclick="toggleContentCreator(this)">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Seção de Conteúdo -->
+                            <div class="content-section">
+                                <div class="mb-3">
+                                    <input type="text" id="contentTitle" class="form-control" placeholder="Título do conteúdo">
+                                </div>
+
+                                <div id="slidesContainer">
+                                    <!-- Slides serão adicionados aqui -->
+                                </div>
+                                <div class="slide-navigation mt-3 d-flex justify-content-between align-items-center">
+                                    <button id="prevSlide" class="btn btn-secondary" onclick="contentCreator.previousSlide()" disabled>
+                                        <i class="fas fa-chevron-left"></i> Anterior
+                                    </button>
+                                    <span id="slideCounter">Slide 0 de 0</span>
+                                    <button id="nextSlide" class="btn btn-secondary" onclick="contentCreator.nextSlide()" disabled>
+                                        Próximo <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-primary" onclick="contentCreator.addSlide()">
+                                        <i class="fas fa-plus"></i> Novo Slide
+                                    </button>
+                                    <button class="btn btn-success" onclick="contentCreator.addQuiz()">
+                                        <i class="fas fa-question-circle"></i> Novo Quiz
+                                    </button>
+                                    <button class="btn btn-info" onclick="contentCreator.saveContent()">
+                                        <i class="fas fa-save"></i> Salvar Conteúdo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Conteúdos -->
+                    <div class="card">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Conteúdos Criados</h5>
+                            <button class="toggle-btn" onclick="toggleContentList(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="contentsList" class="list-group"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="curve-shape"></div>
+    </section>
+ <!-- Floating Action Button -->
+ <a href="#" class="floating-action-button" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+    <i class="fas fa-robot"></i>
+</a>
+
+<!-- AI Chat Modal -->
+<div class="modal fade" id="aiChatModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-robot me-2"></i>
+                    Assistente IA
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-container mb-3" style="height: 400px; overflow-y: auto;">
+                    <div id="chatMessages" class="p-3">
+                        <!-- Mensagens serão adicionadas aqui -->
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="questionInput" class="form-control" placeholder="Digite sua pergunta...">
+                    <button class="btn btn-primary" onclick="askAI()">
+                        <i class="fas fa-paper-plane"></i> Enviar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        // Função para gerar nomes aleatórios
+        function generateRandomName() {
+            const firstNames = ['João', 'Maria', 'Pedro', 'Ana', 'Lucas', 'Julia', 'Gabriel', 'Beatriz'];
+            const lastNames = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira'];
+            
+            return `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+        }
+
+        // Função para gerar dados aleatórios para cada turma
+        function generateClassData(turma) {
+            const alunos = [];
+            for (let i = 0; i < 30; i++) {
+                alunos.push({
+                    name: generateRandomName(),
+                    points: Math.floor(Math.random() * 1000),
+                    turma: turma
+                });
+            }
+            return alunos;
+        }
+
+        // Dados do ranking com 30 alunos por turma
+        const rankingData = {
+            '9A': generateClassData('9A'),
+            '9B': generateClassData('9B'),
+            '9C': generateClassData('9C'),
+            '9D': generateClassData('9D')
+        };
+
+        function getPositionClass(position) {
+            if (position === 1) return ['gold', 'badge-gold'];
+            if (position === 2) return ['silver', 'badge-silver'];
+            if (position === 3) return ['bronze', 'badge-bronze'];
+            return ['', 'badge-normal'];
+        }
+
+        function updateRanking(turma) {
+            const rankingList = document.getElementById('rankingList');
+            rankingList.innerHTML = '';
+
+            const alunos = rankingData[turma];
+            alunos.sort((a, b) => b.points - a.points);
+
+            alunos.forEach((aluno, index) => {
+                const position = index + 1;
+                const [itemClass, badgeClass] = getPositionClass(position);
+                
+                const rankingItem = `
+                    <div class="ranking-item ${itemClass} p-3 mb-2 d-flex align-items-center">
+                        <div class="position-badge ${badgeClass} me-3">${position}</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${aluno.name}</h6>
+                            <small class="text-muted">
+                                ${new Date().toLocaleDateString()} - 
+                                ${aluno.points} pontos
+                            </small>
+                        </div>
+                        <div class="points">
+                            <span class="badge bg-primary">${aluno.points} pontos</span>
+                        </div>
+                    </div>
+                `;
+                rankingList.innerHTML += rankingItem;
+            });
+
+            // Salva a turma selecionada
+            localStorage.setItem('selectedTurma', turma);
+        }
+
+        function toggleRanking(button) {
+            const rankingScroll = document.querySelector('.ranking-scroll');
+            const cardBody = button.closest('.card').querySelector('.card-body');
+            
+            button.classList.toggle('collapsed');
+            rankingScroll.classList.toggle('collapsed');
+            cardBody.classList.toggle('collapsed');
+            
+            // Salva o estado no localStorage
+            localStorage.setItem('rankingCollapsed', button.classList.contains('collapsed'));
+        }
+
+        // Load professor data and initialize ranking
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser || currentUser.userType !== 'professor') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Initialize ranking with 9A
+            updateRanking('9A');
+
+            // Add event listener for turma selection
+            document.getElementById('turmaSelect').addEventListener('change', function(e) {
+                updateRanking(e.target.value);
+            });
+
+            // Restaura o estado do ranking
+            const isRankingCollapsed = localStorage.getItem('rankingCollapsed') === 'true';
+            if (isRankingCollapsed) {
+                const rankingButton = document.querySelector('.ranking-card .toggle-btn');
+                const rankingScroll = document.querySelector('.ranking-scroll');
+                const rankingCardBody = rankingButton.closest('.card').querySelector('.card-body');
+                
+                rankingButton.classList.add('collapsed');
+                rankingScroll.classList.add('collapsed');
+                rankingCardBody.classList.add('collapsed');
+            }
+
+            // Restaura a turma selecionada
+            const lastSelectedTurma = localStorage.getItem('selectedTurma');
+            if (lastSelectedTurma) {
+                document.getElementById('turmaSelect').value = lastSelectedTurma;
+                updateRanking(lastSelectedTurma);
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <script>
+        // Inicializar o contentCreator quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            contentCreator.init();
+            contentCreator.loadContentsList();
+        });
+
+        function toggleContentCreator(button) {
+            const card = button.closest('.card');
+            const cardBody = card.querySelector('.card-body');
+            const icon = button.querySelector('i');
+            
+            cardBody.classList.toggle('collapsed');
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
+        }
+
+        function toggleContentList(button) {
+            const card = button.closest('.card');
+            const cardBody = card.querySelector('.card-body');
+            const icon = button.querySelector('i');
+            
+            cardBody.classList.toggle('collapsed');
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
+        }
+
+        const contentCreator = {
+            totalSlides: 0,
+            currentSlide: 1,
+            editingContent: null,
+            previewingContent: null,
+            currentPreviewSlide: 0,
+
+            init() {
+                this.clearContent();
+                this.loadContentsList();
+            },
+
+            updateSlideCounter() {
+                const counter = document.getElementById('slideCounter');
+                if (counter) {
+                    counter.textContent = `Slide ${this.currentSlide} de ${this.totalSlides}`;
+                }
+
+                const slides = document.querySelectorAll('.slide-preview');
+                slides.forEach((slide, index) => {
+                    if (index + 1 === this.currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+            },
+
+            clearContent() {
+                document.getElementById('contentTitle').value = '';
+                document.getElementById('slidesContainer').innerHTML = '';
+                this.totalSlides = 0;
+                this.currentSlide = 1;
+                this.editingContent = null;
+                this.updateSlideCounter();
+            },
+
+            loadContentsList() {
+                const contentsList = document.getElementById('contentsList');
+                if (!contentsList) return;
+
+                let contents = [];
+                try {
+                    console.log('Attempting to load contents from localStorage');
+                    const storedData = localStorage.getItem('contents');
+                    console.log('Stored data:', storedData);
+                    
+                    contents = JSON.parse(storedData || '[]');
+                    console.log('Parsed contents:', contents);
+                } catch (e) {
+                    console.error('Erro ao carregar conteúdos:', e);
+                    contents = [];
+                }
+
+                if (contents.length === 0) {
+                    contentsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Nenhum conteúdo criado ainda</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                contentsList.innerHTML = contents.map((content) => {
+                    const numSlides = content.slides ? content.slides.length : 0;
+                    return `
+                        <div class="list-group-item">
+                            <div class="content-info">
+                                <h6 class="mb-0">${content.title}</h6>
+                                <small class="text-muted">
+                                    ${new Date(content.createdAt).toLocaleDateString()} - 
+                                    ${numSlides} ${numSlides === 1 ? 'slide' : 'slides'}
+                                </small>
+                            </div>
+                            <div class="content-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="contentCreator.openPreview(${content.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="contentCreator.editContent(${content.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="contentCreator.deleteContent(${content.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            openPreview(id) {
+                const contents = JSON.parse(localStorage.getItem('contents') || '[]');
+                const content = contents.find(c => c.id === id);
+                
+                if (!content || !content.slides) {
+                    alert('Conteúdo não encontrado');
+                    return;
+                }
+
+                // Criar modal de visualização
+                const modalHtml = `
+                    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="previewTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="previewSlideContent" class="preview-slide-content"></div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <div id="previewSlideCounter" class="text-muted"></div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-primary" onclick="contentCreator.previousPreviewSlide()">
+                                            <i class="fas fa-chevron-left"></i> Anterior
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary" onclick="contentCreator.nextPreviewSlide()">
+                                            Próximo <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Remover modal anterior se existir
+                const existingModal = document.getElementById('previewModal');
+                if (existingModal) {
+                    existingModal.remove();
+                }
+
+                // Adicionar novo modal ao documento
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                // Inicializar dados de preview
+                this.previewingContent = content;
+                this.currentPreviewSlide = 0;
+
+                // Mostrar primeiro slide
+                this.showPreviewSlide();
+
+                // Abrir modal usando Bootstrap 5
+                const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+                modal.show();
+            },
+
+            previousPreviewSlide() {
+                if (this.currentPreviewSlide > 0) {
+                    this.currentPreviewSlide--;
+                    this.showPreviewSlide();
+                }
+            },
+
+            nextPreviewSlide() {
+                if (this.previewingContent && this.currentPreviewSlide < this.previewingContent.slides.length - 1) {
+                    this.currentPreviewSlide++;
+                    this.showPreviewSlide();
+                }
+            },
+
+            showPreviewSlide() {
+                if (!this.previewingContent || !this.previewingContent.slides) return;
+
+                const slideContent = this.previewingContent.slides[this.currentPreviewSlide];
+                const previewContainer = document.getElementById('previewSlideContent');
+                const counter = document.getElementById('previewSlideCounter');
+
+                if (!previewContainer || !counter || !slideContent) return;
+
+                counter.textContent = `Slide ${this.currentPreviewSlide + 1} de ${this.previewingContent.slides.length}`;
+
+                if (slideContent.type === 'quiz') {
+                    previewContainer.innerHTML = `
+                        <div class="preview-quiz">
+                            <h4 class="preview-quiz-question mb-4">${slideContent.question}</h4>
+                            <div class="preview-quiz-options">
+                                ${slideContent.options.map((option, index) => `
+                                    <div class="quiz-option mb-3" onclick="contentCreator.checkQuizAnswer(${index})">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="previewQuiz" value="${index}">
+                                            <label class="form-check-label">
+                                                ${option}
+                                            </label>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let imageHtml = '';
+                    if (slideContent.image) {
+                        imageHtml = `
+                            <div class="preview-image-container mb-4">
+                                <img src="${slideContent.image}" alt="Slide image" class="preview-slide-image">
+                            </div>
+                        `;
+                    }
+
+                    previewContainer.innerHTML = `
+                        <div class="preview-slide">
+                            ${imageHtml}
+                            <div class="preview-slide-text">
+                                ${slideContent.text || ''}
+                            </div>
+                        </div>
+                    `;
+
+                    // Log para debug
+                    console.log('Preview slide content:', {
+                        type: slideContent.type,
+                        hasImage: !!slideContent.image,
+                        imageLength: slideContent.image ? slideContent.image.length : 0,
+                        text: slideContent.text
+                    });
+                }
+            },
+            
+            checkQuizAnswer(selectedIndex) {
+                if (!this.previewingContent || !this.previewingContent.slides) return;
+
+                const currentSlide = this.previewingContent.slides[this.currentPreviewSlide];
+                if (!currentSlide || currentSlide.type !== 'quiz') return;
+
+                const options = document.querySelectorAll('.quiz-option');
+                options.forEach((option, index) => {
+                    if (index === currentSlide.correctAnswer) {
+                        option.classList.add('correct');
+                    } else if (index === selectedIndex) {
+                        option.classList.add('incorrect');
+                    }
+                });
+            },
+            
+            addSlide() {
+                this.totalSlides++;
+                const slideNumber = this.totalSlides;
+                
+                const slideHtml = `
+                    <div class="slide-preview mb-4 ${this.currentSlide === this.totalSlides ? 'active' : ''}" data-slide="${this.totalSlides}">
+                        <div class="slide-header">
+                            <h6>Slide ${this.totalSlides}</h6>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="contentCreator.removeSlide(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="slide-content">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Texto do slide</label>
+                                <textarea class="form-control slide-text" rows="4" placeholder="Digite o texto do slide..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Imagem do slide</label>
+                                <div class="d-flex gap-2 align-items-start">
+                                    <div class="flex-grow-1">
+                                        <input type="file" accept="image/*" class="form-control" onchange="contentCreator.handleImageUpload(event, this.closest('.slide-preview'))">
+                                    </div>
+                                    <button class="btn btn-outline-danger" onclick="contentCreator.removeImage(this.closest('.slide-preview'))">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="image-preview mt-3" style="display: none;">
+                                    <img src="" class="slide-image" style="max-width: 100%; border-radius: 8px;">
+                                </div>
+                                <input type="hidden" class="slide-image-data">
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('slidesContainer').insertAdjacentHTML('beforeend', slideHtml);
+                this.updateSlideCounter();
+                
+                // Mostrar o novo slide imediatamente após criá-lo
+                this.showSlide(slideNumber);
+                
+                // Ajustar slide atual se necessário
+                if (this.currentSlide > this.totalSlides) {
+                    this.currentSlide = this.totalSlides;
+                }
+                if (this.currentSlide < 1) {
+                    this.currentSlide = 1;
+                }
+
+                this.updateSlideCounter();
+                
+                // Habilitar/desabilitar botões de navegação
+                document.getElementById('prevSlide').disabled = slideNumber === 1;
+                document.getElementById('nextSlide').disabled = true;
+                
+                // Rolar para o novo slide
+                const newSlide = document.querySelector(`[data-slide="${slideNumber}"]`);
+                newSlide.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            handleImageUpload(event, slidePreview) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                // Verificar se é uma imagem
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, selecione apenas arquivos de imagem.');
+                    event.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = slidePreview.querySelector('.image-preview');
+                    const imgElement = slidePreview.querySelector('.slide-image');
+                    const imageData = slidePreview.querySelector('.slide-image-data');
+                    
+                    if (imagePreview && imgElement && imageData) {
+                        const imageUrl = e.target.result;
+                        imgElement.src = imageUrl;
+                        imagePreview.style.display = 'block';
+                        imageData.value = imageUrl; // Ensure we're setting the value here
+                        
+                        // Log for debugging
+                        console.log('Image data saved:', {
+                            preview: imagePreview.style.display,
+                            imgSrc: imgElement.src.substring(0, 50) + '...',
+                            dataValue: imageData.value.substring(0, 50) + '...'
+                        });
+                    } else {
+                        console.error('Missing required elements:', {
+                            imagePreview: !!imagePreview,
+                            imgElement: !!imgElement,
+                            imageData: !!imageData
+                        });
+                    }
+                };
+
+                reader.onerror = function(error) {
+                    console.error('Error reading image file:', error);
+                    alert('Erro ao carregar a imagem. Por favor, tente novamente.');
+                    event.target.value = '';
+                };
+
+                reader.readAsDataURL(file);
+            },
+
+            removeImage(slidePreview) {
+                const imagePreview = slidePreview.querySelector('.image-preview');
+                const imgElement = slidePreview.querySelector('.slide-image');
+                const inputFile = slidePreview.querySelector('input[type="file"]');
+                const imageData = slidePreview.querySelector('.slide-image-data');
+                
+                if (imagePreview) {
+                    imagePreview.style.display = 'none';
+                }
+                if (imgElement) {
+                    imgElement.src = '';
+                }
+                if (inputFile) {
+                    inputFile.value = '';
+                }
+                if (imageData) {
+                    imageData.value = '';
+                }
+            },
+            
+            addQuiz() {
+                this.totalSlides++;
+                const slideNumber = this.totalSlides;
+                
+                const quizHtml = `
+                    <div class="slide-preview quiz-slide active" data-slide="${slideNumber}">
+                        <div class="slide-header">
+                            <span>Quiz ${slideNumber}</span>
+                            <button class="btn btn-danger btn-sm" onclick="contentCreator.removeSlide(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="slide-content">
+                            <div class="form-group">
+                                <textarea class="form-control quiz-question" placeholder="Digite a pergunta..." rows="2"></textarea>
+                            </div>
+                            <div class="quiz-options">
+                                <div class="quiz-option">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct${slideNumber}" checked>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Opção 1">
+                                        <button class="btn btn-outline-danger" onclick="contentCreator.removeOption(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="quiz-option">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct${slideNumber}">
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Opção 2">
+                                        <button class="btn btn-outline-danger" onclick="contentCreator.removeOption(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="quiz-option">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct${slideNumber}">
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Opção 3">
+                                        <button class="btn btn-outline-danger" onclick="contentCreator.removeOption(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="quiz-option">
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input type="radio" name="correct${slideNumber}">
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Opção 4">
+                                        <button class="btn btn-outline-danger" onclick="contentCreator.removeOption(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="quiz-controls">
+                                <button class="btn btn-primary btn-sm" onclick="contentCreator.addOption(this)">
+                                    <i class="fas fa-plus"></i> Adicionar Opção
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('slidesContainer').insertAdjacentHTML('beforeend', quizHtml);
+                this.updateSlideCounter();
+                this.showSlide(slideNumber);
+            },
+
+            addOption(button) {
+                const quizSlide = button.closest('.quiz-slide');
+                const slideNumber = quizSlide.dataset.slide;
+                const optionsContainer = quizSlide.querySelector('.quiz-options');
+                const optionCount = optionsContainer.children.length + 1;
+                
+                const optionHtml = `
+                    <div class="quiz-option">
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input type="radio" name="correct${slideNumber}">
+                            </div>
+                            <input type="text" class="form-control" placeholder="Opção ${optionCount}">
+                            <button class="btn btn-outline-danger" onclick="contentCreator.removeOption(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                optionsContainer.insertAdjacentHTML('beforeend', optionHtml);
+            },
+
+            removeOption(button) {
+                const optionElement = button.closest('.quiz-option');
+                const quizOptionsContainer = optionElement.parentElement;
+                
+                if (quizOptionsContainer.querySelectorAll('.quiz-option').length <= 1) {
+                    alert('O quiz deve ter pelo menos uma opção.');
+                    return;
+                }
+                
+                optionElement.remove();
+            },
+
+            previousSlide() {
+                if (this.currentSlide > 1) {
+                    this.showSlide(this.currentSlide - 1);
+                }
+            },
+
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides) {
+                    this.showSlide(this.currentSlide + 1);
+                }
+            },
+
+            showSlide(slideNumber) {
+                // Esconder todos os slides
+                document.querySelectorAll('.slide-preview').forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Mostrar o slide selecionado
+                const selectedSlide = document.querySelector(`[data-slide="${slideNumber}"]`);
+                if (selectedSlide) {
+                    selectedSlide.classList.add('active');
+                    this.currentSlide = parseInt(slideNumber);
+                    
+                    // Atualizar botões de navegação se existirem
+                    const prevButton = document.getElementById('prevSlide');
+                    const nextButton = document.getElementById('nextSlide');
+                    const counterElement = document.getElementById('slideCounter');
+                    
+                    if (prevButton) {
+                        prevButton.disabled = this.currentSlide === 1;
+                    }
+                    if (nextButton) {
+                        nextButton.disabled = this.currentSlide === this.totalSlides;
+                    }
+                    if (counterElement) {
+                        counterElement.textContent = `Slide ${this.currentSlide} de ${this.totalSlides}`;
+                    }
+                    
+                    // Rolar para o slide
+                    selectedSlide.scrollIntoView({ behavior: 'smooth' });
+                }
+            },
+
+            removeSlide(button) {
+                const slidePreview = button.closest('.slide-preview');
+                if (!slidePreview) return;
+
+                const slideNumber = parseInt(slidePreview.getAttribute('data-slide'));
+                slidePreview.remove();
+
+                // Atualizar números dos slides restantes
+                const slides = document.querySelectorAll('.slide-preview');
+                slides.forEach((slide, index) => {
+                    const header = slide.querySelector('.slide-header h6');
+                    if (header) {
+                        header.textContent = `Slide ${index + 1}`;
+                    }
+                    slide.setAttribute('data-slide', index + 1);
+                });
+
+                this.totalSlides = slides.length;
+                
+                // Ajustar slide atual se necessário
+                if (this.currentSlide > this.totalSlides) {
+                    this.currentSlide = this.totalSlides;
+                }
+                if (this.currentSlide < 1) {
+                    this.currentSlide = 1;
+                }
+
+                this.updateSlideCounter();
+            },
+
+            editContent(id) {
+                const contents = JSON.parse(localStorage.getItem('contents') || '[]');
+                const content = contents.find(c => c.id === id);
+                
+                if (!content || !content.slides) {
+                    alert('Conteúdo não encontrado');
+                    return;
+                }
+
+                // Limpar conteúdo atual
+                this.clearContent();
+
+                // Carregar dados do conteúdo
+                document.getElementById('contentTitle').value = content.title;
+                this.editingContent = content;
+
+                // Recriar slides
+                content.slides.forEach(slide => {
+                    if (slide.type === 'quiz') {
+                        this.addQuiz();
+                        const lastSlide = document.querySelector('.slide-preview:last-child');
+                        if (lastSlide) {
+                            lastSlide.querySelector('.quiz-question').value = slide.question;
+                            slide.options.forEach((option, index) => {
+                                const optionInput = lastSlide.querySelectorAll('.quiz-option input[type="text"]')[index];
+                                if (optionInput) {
+                                    optionInput.value = option;
+                                }
+                            });
+                            const correctRadio = lastSlide.querySelector(`input[type="radio"][name="correct${this.totalSlides}"]`);
+                            if (correctRadio) {
+                                correctRadio.checked = true;
+                            }
+                        }
+                    } else {
+                        this.addSlide();
+                        const lastSlide = document.querySelector('.slide-preview:last-child');
+                        if (lastSlide) {
+                            // Set text content
+                            const textArea = lastSlide.querySelector('.slide-text');
+                            if (textArea) {
+                                textArea.value = slide.text || '';
+                            }
+
+                            // Set image if exists
+                            if (slide.image) {
+                                const imagePreview = lastSlide.querySelector('.image-preview');
+                                const imgElement = lastSlide.querySelector('.slide-image');
+                                const imageData = lastSlide.querySelector('.slide-image-data');
+                                
+                                if (imagePreview && imgElement && imageData) {
+                                    imgElement.src = slide.image;
+                                    imagePreview.style.display = 'block';
+                                    imageData.value = slide.image;
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Atualizar contador de slides
+                this.totalSlides = content.slides.length;
+                this.currentSlide = 1;
+                this.updateSlideCounter();
+
+                // Log para debug
+                console.log('Content loaded for editing:', {
+                    id,
+                    title: content.title,
+                    totalSlides: this.totalSlides,
+                    slides: content.slides.map(slide => ({
+                        type: slide.type,
+                        hasImage: !!slide.image,
+                        imageLength: slide.image ? slide.image.length : 0
+                    }))
+                });
+            },
+            
+            deleteContent(id) {
+                if (!confirm('Tem certeza que deseja excluir este conteúdo?')) {
+                    return;
+                }
+
+                let contents = [];
+                try {
+                    contents = JSON.parse(localStorage.getItem('contents') || '[]');
+                } catch (e) {
+                    console.error('Erro ao carregar conteúdos:', e);
+                    return;
+                }
+
+                const index = contents.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    contents.splice(index, 1);
+                    localStorage.setItem('contents', JSON.stringify(contents));
+                    this.loadContentsList();
+                }
+            },
+
+            saveContent() {
+                const title = document.getElementById('contentTitle').value.trim();
+                if (!title) {
+                    alert('Por favor, insira um título para o conteúdo.');
+                    return;
+                }
+
+                const slides = document.querySelectorAll('.slide-preview');
+                if (slides.length === 0) {
+                    alert('Por favor, adicione pelo menos um slide.');
+                    return;
+                }
+
+                const content = [];
+                let hasContent = false;
+
+                slides.forEach(slideEl => {
+                    if (slideEl.classList.contains('quiz-slide')) {
+                        const question = slideEl.querySelector('.quiz-question')?.value || '';
+                        const options = [];
+                        const optionsContainer = slideEl.querySelector('.quiz-options');
+                        if (optionsContainer) {
+                            const optionElements = optionsContainer.querySelectorAll('.quiz-option');
+                            let correctAnswerIndex = -1;
+                            
+                            optionElements.forEach((optionEl, index) => {
+                                const textInput = optionEl.querySelector('input[type="text"]');
+                                const radioInput = optionEl.querySelector('input[type="radio"]');
+                                
+                                if (textInput && radioInput) {
+                                    const text = textInput.value.trim();
+                                    if (text) { // Only add non-empty options
+                                        options.push(text);
+                                        if (radioInput.checked) {
+                                            correctAnswerIndex = options.length - 1;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (options.length > 0 && correctAnswerIndex !== -1) {
+                                content.push({
+                                    type: 'quiz',
+                                    question,
+                                    options,
+                                    correctAnswer: correctAnswerIndex
+                                });
+                                hasContent = true;
+                            }
+                        }
+                    } else {
+                        const text = slideEl.querySelector('.slide-text')?.value || '';
+                        const imageData = slideEl.querySelector('.slide-image-data')?.value || '';
+                        
+                        if (text || (imageData && imageData !== '' && !imageData.endsWith('slide-image'))) {
+                            content.push({
+                                type: 'slide',
+                                text,
+                                image: imageData
+                            });
+                            hasContent = true;
+                        }
+                    }
+                });
+
+                if (!hasContent) {
+                    alert('Por favor, adicione conteúdo em pelo menos um slide.');
+                    return;
+                }
+
+                let contents = [];
+                try {
+                    contents = JSON.parse(localStorage.getItem('contents') || '[]');
+                } catch (e) {
+                    console.error('Erro ao carregar conteúdos:', e);
+                    contents = [];
+                }
+
+                const newContent = {
+                    id: this.editingContent ? this.editingContent.id : Date.now(),
+                    title,
+                    slides: content,
+                    createdAt: this.editingContent ? this.editingContent.createdAt : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (this.editingContent) {
+                    const index = contents.findIndex(c => c.id === this.editingContent.id);
+                    if (index !== -1) {
+                        contents[index] = newContent;
+                    }
+                } else {
+                    contents.push(newContent);
+                }
+
+                try {
+                    localStorage.setItem('contents', JSON.stringify(contents));
+                    this.clearContent();
+                    this.loadContentsList();
+                    alert('Conteúdo salvo com sucesso!');
+                } catch (e) {
+                    console.error('Erro ao salvar conteúdo:', e);
+                    alert('Erro ao salvar o conteúdo. Por favor, tente novamente.');
+                }
+            },
+            
+        };
+    </script>
+
+    <script>
+        // Função para perguntar à IA
+        async function askAI() {
+            const questionInput = document.getElementById('questionInput');
+            const chatMessages = document.getElementById('chatMessages');
+            const question = questionInput.value.trim();
+            
+            if (!question) return;
+            
+            // Adicionar pergunta ao chat
+            chatMessages.innerHTML += `
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="bg-primary text-white p-2 rounded" style="max-width: 70%;">
+                        ${question}
+                    </div>
+                </div>
+            `;
+            
+            questionInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/ask-ai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Adicionar resposta ao chat
+                chatMessages.innerHTML += `
+                    <div class="d-flex justify-content-start mb-3">
+                        <div class="bg-light p-2 rounded" style="max-width: 70%;">
+                            ${data.answer}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                chatMessages.innerHTML += `
+                    <div class="d-flex justify-content-start mb-3">
+                        <div class="bg-danger text-white p-2 rounded">
+                            Erro: ${error.message}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Permitir enviar com Enter
+        document.getElementById('questionInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askAI();
+            }
+        });
+    </script>
+
+    <!-- AI Chat Modal -->
+    <div class="modal fade" id="aiChatModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assistente IA</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container mb-3" style="height: 400px; overflow-y: auto;">
+                        <div id="chatMessages" class="p-3">
+                            <!-- Mensagens serão adicionadas aqui -->
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="questionInput" class="form-control" placeholder="Faça uma pergunta...">
+                        <button class="btn btn-primary" onclick="askAI()">
+                            <i class="fas fa-paper-plane"></i> Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!-- Modal de Preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="previewSlideContent" class="preview-slide-content"></div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <div id="previewSlideCounter" class="text-muted"></div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary" onclick="contentCreator.previousPreviewSlide()">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="contentCreator.nextPreviewSlide()">
+                        Próximo <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
