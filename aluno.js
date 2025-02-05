@@ -362,8 +362,8 @@ var contentData = {
 };
 
 // Sobrescreve a função showPreview do HTML
-function showPreview(contentId) {
-    currentContent = contentData[contentId];
+async function showPreview(contentId) {
+    currentContent = await getContentById(contentId)
     currentPreviewSlide = 1;
     const modal = new bootstrap.Modal(document.getElementById('previewModal'));
     modal.show();
@@ -392,26 +392,28 @@ function previousSlide() {
 function showPreviewSlide() {
     const previewContent = document.getElementById('previewContent');
     const slide = currentContent.slides[currentPreviewSlide - 1];
-
-    if (slide.type === 'quiz') {
+    console.log("currentContent",currentContent,slide)
+    if (slide.quiz != undefined) {
+        const options = [slide.quiz.option1, slide.quiz.option2,slide.quiz.option3,slide.quiz.option4]
+        const markedQuestion = checkIfIsAnswer(slide.quiz.id)
         let quizHtml = `
             <div class="quiz-container">
-                <h4 class="mb-4">${slide.question}</h4>
+                <h4 class="mb-4">${slide.quiz.question}</h4>
                 <div class="quiz-options">
         `;
 
-        slide.options.forEach((option, index) => {
+        options.forEach((option, index) => {
             quizHtml += `
-                <div class="quiz-option mb-3" onclick="checkQuizAnswer(${index})">
+                <div class="quiz-option mb-3" onclick="checkQuizAnswer(${index}, ${slide.quiz.id})">
                     <span class="option-letter">${String.fromCharCode(65 + index)}</span>
                     <span class="option-text">${option}</span>
-                    ${index === slide.correctAnswer ? `
+                    ${index+1 == slide.quiz.rightOption ? `
                         <div class="correct-answer-explanation" style="display: none;">
                             <div class="alert alert-success mt-2">
                                 <i class="fas fa-check-circle me-2"></i>
                                 <strong>Resposta Correta!</strong>
                                 <hr>
-                                ${slide.explanation}
+                                ${slide.quiz.reason}
                             </div>
                         </div>
                     ` : ''}
@@ -426,7 +428,7 @@ function showPreviewSlide() {
 
         previewContent.innerHTML = quizHtml;
     } else {
-        previewContent.innerHTML = slide.content;
+        previewContent.innerHTML = slide.text;
     }
 }
 
@@ -445,34 +447,117 @@ function updatePointsDisplay(points) {
     }
 }
 
+let alunoInfo
+let totalPontos = 0
 // Inicializar pontuação ao carregar a página
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
+
+    alunoInfo = await getStudentInfo()
+    totalPontos = 0
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser) {
-        updatePointsDisplay(currentUser.points || 850);
-    }
+    alunoInfo.studentsQuizs.forEach(quiz => {
+        if (quiz.markedOption == quiz.quiz.rightOption) {
+            totalPontos = totalPontos + 1;
+        }
+    })
+    document.getElementById('studentNameAux').textContent = alunoInfo.name;
+    updatePointsDisplay(totalPontos);
+    loadRanking()
+    loadContents(alunoInfo.classroom.teacher.contents, alunoInfo.classroom.teacher.name);
+    //document.getElementById('studentPoints').textContent = totalPontos;
+
 });
 
-function checkQuizAnswer(selectedIndex) {
+async function loadRanking() {
+    let ranking = await getRanking(alunoInfo.classroom.id)
+    let rankingAux = []
+    ranking.forEach((student, index) => {
+        if (student.id == alunoInfo.id) {
+            document.getElementById("ranking-position").textContent = index + 1
+        }
+    })
+}
+
+// Carregar lista de conteúdos
+function loadContents(contentsAux, teacher) {
+    const contents = contentsAux
+    const contentsList = document.getElementById('content-list-id');
+    contentsList.innerHTML = '';
+
+    contents.sort((a, b) => {
+        if (a.created < b.created) {
+            return 1
+        }
+        return -1;
+    })
+    contents.forEach((content, index) => {
+        const div = document.createElement('div');
+        console.log("content",content)
+        div.innerHTML = `
+            <div class="content-item mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-primary mb-0">
+                                                <i class="fas fa-history me-2"></i>
+                                                História
+                                            </h6>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">${content.name}</h6>
+                                                        <p class="text-muted small mb-0">
+                                                            <i class="fas fa-clock me-1"></i>
+                                                            Última atualização: ${content.created}
+                                                        </p>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm" onclick="showPreview(${content.id})">
+                                                        <i class="fas fa-eye me-1"></i>
+                                                        Visualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        `;
+        contentsList.appendChild(div);
+    });
+}
+
+const checkIfIsAnswer = (quizId) => {
+    var markedQuiz = 0
+    if(alunoInfo){
+        alunoInfo.studentsQuizs.find(quiz=>{
+            if(quiz.quiz.id == quizId){
+                return quiz.markedOption
+            }
+            return false
+        })
+    }
+    return markedQuiz
+}
+async function checkQuizAnswer(selectedIndex, quizId) {
     const slide = currentContent.slides[currentPreviewSlide - 1];
     const options = document.querySelectorAll('.quiz-option');
-    
+
+    await responseQuiz(quizId,selectedIndex)
+
     // Remove explicações anteriores
     document.querySelectorAll('.correct-answer-explanation').forEach(exp => {
         exp.style.display = 'none';
     });
 
     // Atualizar pontuação se acertar
-    if (selectedIndex === slide.correctAnswer) {
+    if (selectedIndex+1 === slide.quiz.rightOption) {
         // Recuperar usuário atual
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser) {
             // Adicionar 10 pontos
             currentUser.points = (currentUser.points || 850) + 10;
-            
+
             // Atualizar no localStorage
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
+
             // Atualizar na lista de usuários
             const users = JSON.parse(localStorage.getItem('users') || '[]');
             const userIndex = users.findIndex(u => u.username === currentUser.username);
@@ -480,7 +565,7 @@ function checkQuizAnswer(selectedIndex) {
                 users[userIndex].points = currentUser.points;
                 localStorage.setItem('users', JSON.stringify(users));
             }
-            
+
             // Atualizar pontuação em todos os lugares
             updatePointsDisplay(currentUser.points);
 
@@ -502,7 +587,7 @@ function checkQuizAnswer(selectedIndex) {
 
     options.forEach((option, index) => {
         option.classList.remove('correct', 'incorrect');
-        if (index === slide.correctAnswer) {
+        if (index+1 === slide.quiz.rightOption) {
             option.classList.add('correct');
             // Mostra a explicação da resposta correta
             const explanation = option.querySelector('.correct-answer-explanation');
@@ -518,7 +603,7 @@ function checkQuizAnswer(selectedIndex) {
 function toggleContentList(button) {
     const icon = button.querySelector('i');
     const cardBody = button.closest('.card').querySelector('.card-body');
-    
+
     if (icon.classList.contains('fa-chevron-up')) {
         icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
         cardBody.style.display = 'none';

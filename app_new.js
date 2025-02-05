@@ -46,32 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle login form submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.onsubmit = function(e) {
+        loginForm.onsubmit = async function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            // Verificar credenciais e redirecionar baseado no nome de usuário
-            if ((username === 'professor' || username === '123') && password === '123') {
-                // Salvar dados do usuário no localStorage
-                localStorage.setItem('currentUser', JSON.stringify({
-                    username: username,
-                    userType: 'professor',
-                    name: 'Professor',
-                    email: 'professor@example.com'
-                }));
-                window.location.href = 'professor.html';
-            } else if (username === 'aluno' && password === '123') {
-                // Salvar dados do usuário no localStorage
-                localStorage.setItem('currentUser', JSON.stringify({
-                    username: username,
-                    userType: 'aluno',
-                    name: 'Aluno',
-                    email: 'aluno@example.com'
-                }));
-                window.location.href = 'aluno.html';
-            } else {
-                alert('Usuário ou senha incorretos!\nUse:\nProfessor: usuario="123" ou "professor", senha="123"\nAluno: usuario="aluno", senha="123"');
+        
+        
+            try{
+                const ret = await doLogin(username, password)
+                console.log("ret",ret.role)
+                if(ret){
+                    if (ret.role === 'TEACHER') {
+                        window.location.href = 'professor.html';
+                    } else if (ret.role === 'STUDENT')  {
+                        window.location.href = 'aluno.html';
+                    }
+                }
+            }
+            catch{
+                alert('Usuário ou senha inválidos!');
             }
         }
     }
